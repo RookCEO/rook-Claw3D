@@ -8,7 +8,11 @@ const securityHeaders = [
       "default-src 'self'",
       "base-uri 'self'",
       "form-action 'self'",
-      "frame-ancestors 'self'",
+      // rook fork: relaxed so the Hermes dashboard (different port on the
+      // same tailnet host) can embed /office in an iframe. The Claw3D
+      // server is tailnet-only via `tailscale serve`, so * is acceptable
+      // — clickjacking from the public internet is not a threat model.
+      "frame-ancestors *",
       "img-src 'self' data: blob: http: https:",
       "font-src 'self' data: https:",
       "style-src 'self' 'unsafe-inline' https:",
@@ -35,10 +39,9 @@ const securityHeaders = [
     key: "X-Content-Type-Options",
     value: "nosniff",
   },
-  {
-    key: "X-Frame-Options",
-    value: "SAMEORIGIN",
-  },
+  // rook fork: X-Frame-Options dropped intentionally. SAMEORIGIN can't be
+  // expanded to allow the dashboard origin (different port); CSP
+  // frame-ancestors supersedes it for modern browsers.
   {
     key: "Permissions-Policy",
     value: "camera=(), microphone=(self), geolocation=(), browsing-topics=()",

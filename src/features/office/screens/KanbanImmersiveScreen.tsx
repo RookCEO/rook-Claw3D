@@ -83,7 +83,7 @@ export function KanbanImmersiveScreen({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Kanban Board"
+      aria-label="HQ (Claw3D)"
       className="fixed inset-0 z-50 flex items-center justify-center"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -106,7 +106,7 @@ export function KanbanImmersiveScreen({
         >
           <div className="min-h-0 flex-1">
           <TaskBoardView
-            title="Kanban Board"
+            title="HQ (Claw3D)"
             subtitle="Headquarters task routing, scheduling, and review."
             agents={agents}
             cardsByStatus={cardsByStatus}

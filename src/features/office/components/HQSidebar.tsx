@@ -28,7 +28,7 @@ type HQSidebarProps = {
 const TAB_LABELS: Record<HQSidebarTab, string> = {
   inbox: "Inbox",
   history: "History",
-  kanban: "Kanban",
+  kanban: "HQ (Claw3D)",
   playbooks: "Playbooks",
   analytics: "Analytics",
 };

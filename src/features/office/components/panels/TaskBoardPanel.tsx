@@ -39,7 +39,7 @@ export function TaskBoardPanel({
 }) {
   return (
     <TaskBoardView
-      title="Kanban"
+      title="HQ (Claw3D)"
       subtitle="Manual tasks, inferred requests, and scheduled playbooks."
       agents={agents}
       cardsByStatus={cardsByStatus}

@@ -927,7 +927,11 @@ export const useGatewayConnection = (
       for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
         try {
           await client.connect({
-            gatewayUrl: resolveStudioProxyGatewayUrl(),
+            // rook fork: pass the user's saved upstream URL so the resolver
+            // can detect "same-origin" and connect direct (skipping the
+            // Studio's /api/gateway/ws relay which only exists when
+            // running `node server/index.js`).
+            gatewayUrl: resolveStudioProxyGatewayUrl(gatewayUrl),
             token,
             authScopeKey: gatewayUrl,
             clientName: resolveGatewayClientName(selectedAdapterType, gatewayUrl),

@@ -1276,4 +1276,54 @@ function startAdapter() {
 }
 
 loadHistoryFromDisk();
+
+/**
+ * rook fork: pre-populate agentRegistry from Hermes /api/profiles so every
+ * profile shows up in the Claw3D office without each one having to be
+ * created by hand through agents.create. The orchestrator stays pinned to
+ * the existing AGENT_ID = "hermes" slot; everything else is keyed by
+ * profile name.
+ */
+function _rookBootstrapAgentsFromProfiles() {
+  // Scan the on-disk profiles dir directly — the dashboard's /api/profiles
+  // is auth-gated and the Hermes gateway HTTP API doesn't expose profile
+  // enumeration. Each subdir of ~/.hermes/profiles/ is one Hermes profile.
+  try {
+    const profilesDir = path.join(HOME, ".hermes", "profiles");
+    if (!fs.existsSync(profilesDir)) return;
+    const entries = fs.readdirSync(profilesDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const name = entry.name;
+      // Default profile (the orchestrator) is already pinned as AGENT_ID.
+      if (name === "default" || name === AGENT_ID) continue;
+      if (agentRegistry.has(name)) continue;
+      let role = "Agent";
+      let model = HERMES_MODEL;
+      try {
+        const configPath = path.join(profilesDir, name, "config.yaml");
+        if (fs.existsSync(configPath)) {
+          const yaml = fs.readFileSync(configPath, "utf8");
+          const modelMatch = yaml.match(/^\s*model:\s*([^\n#]+)/m);
+          if (modelMatch) model = modelMatch[1].trim();
+          const roleMatch = yaml.match(/^\s*description:\s*([^\n#]+)/m);
+          if (roleMatch) role = roleMatch[1].trim().replace(/^["']|["']$/g, "");
+        }
+      } catch { /* ignore yaml parse errors */ }
+      agentRegistry.set(name, {
+        id: name,
+        name,
+        workspace: path.join(profilesDir, name),
+        role,
+        systemPrompt: `You are ${name}, a Hermes profile.`,
+        settings: { wipe: false, continuity: true, model },
+      });
+    }
+    console.log(`[hermes-adapter] Loaded ${agentRegistry.size} agents from Hermes profiles.`);
+  } catch (err) {
+    console.warn("[hermes-adapter] Could not bootstrap profiles:", sanitizeErrorMessage(err));
+  }
+}
+
+_rookBootstrapAgentsFromProfiles();
 startAdapter();

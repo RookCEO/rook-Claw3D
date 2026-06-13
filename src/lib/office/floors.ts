@@ -34,6 +34,8 @@ export type FloorDefinition = {
 };
 
 export const OFFICE_FLOORS: readonly FloorDefinition[] = [
+  // rook fork: Lobby is the upstream "demo" floor — disabled so the rook
+  // CEO build ships preconfigured and prewired with no demo nonsense.
   {
     id: "lobby",
     label: "Lobby",
@@ -41,7 +43,7 @@ export const OFFICE_FLOORS: readonly FloorDefinition[] = [
     provider: "demo",
     kind: "lobby",
     zone: "building",
-    enabled: true,
+    enabled: false,
     sortOrder: 0,
     runtimeProfileId: null,
   },
@@ -135,7 +137,8 @@ export const OFFICE_FLOORS: readonly FloorDefinition[] = [
   },
 ] as const;
 
-export const DEFAULT_ACTIVE_FLOOR_ID: FloorId = "lobby";
+// rook fork: default to the Hermes floor since lobby is disabled.
+export const DEFAULT_ACTIVE_FLOOR_ID: FloorId = "hermes-first";
 
 const FLOOR_BY_ID: Readonly<Record<FloorId, FloorDefinition>> = OFFICE_FLOORS.reduce(
   (acc, floor) => {

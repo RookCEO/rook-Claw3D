@@ -105,7 +105,7 @@ const SKILL_MARKETPLACE_OVERRIDES: Record<
   "task-manager": {
     category: "Productivity",
     tagline:
-      "Turns actionable requests into persistent shared tasks that power the Claw3D Kanban board.",
+      "Turns actionable requests into persistent shared tasks that power the HQ (Claw3D).",
     capabilities: [
       "Automatic task capture",
       "Task lifecycle tracking",

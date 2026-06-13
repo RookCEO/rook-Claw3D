@@ -375,7 +375,7 @@ const PALETTE: PaletteEntry[] = [
   { type: "jukebox", label: "Jukebox", icon: "🎵", defaults: { facing: 0 } },
   {
     type: "kanban_board",
-    label: "Kanban Board",
+    label: "HQ (Claw3D)",
     icon: "📌",
     defaults: { w: 130, h: 65, facing: 90 },
   },

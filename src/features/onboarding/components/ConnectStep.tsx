@@ -62,7 +62,7 @@ export const ConnectStep = ({
             type="text"
             value={gatewayUrl}
             onChange={(e) => onGatewayUrlChange(e.target.value)}
-            placeholder="ws://localhost:18789 or wss://your-host"
+            placeholder="ws://localhost:18989 or wss://your-host"
             spellCheck={false}
           />
         </label>
@@ -124,7 +124,7 @@ export const ConnectStep = ({
       <div className="space-y-1.5 text-[11px] text-white/40">
         <p>
           <strong className="text-white/60">Local?</strong> Use{" "}
-          <code className="text-white/50">ws://localhost:18789</code>
+          <code className="text-white/50">ws://localhost:18989</code>
         </p>
         <p>
           <strong className="text-white/60">Tailscale?</strong> Use{" "}
@@ -132,7 +132,7 @@ export const ConnectStep = ({
         </p>
         <p>
           <strong className="text-white/60">SSH tunnel?</strong> Forward port
-          18789 first, then use localhost.
+          18989 first, then use localhost.
         </p>
       </div>
     </div>

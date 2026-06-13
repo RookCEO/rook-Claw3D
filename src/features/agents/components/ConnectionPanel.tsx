@@ -115,7 +115,7 @@ export const ConnectionPanel = ({
             type="text"
             value={gatewayUrl}
             onChange={(event) => onGatewayUrlChange(event.target.value)}
-            placeholder="ws://localhost:18789"
+            placeholder="ws://localhost:18989"
             spellCheck={false}
           />
         </label>

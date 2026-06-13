@@ -18,9 +18,13 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline' https:",
       // 'unsafe-eval' is required by Next.js dev mode (source maps, HMR).
       // In production it is dropped — React and Three.js do not need eval.
+      // 'wasm-unsafe-eval' is required in both modes: the office scene loads
+      // a WebAssembly module (used by the Phaser+Box2D physics step). Without
+      // it the renderer throws "WebAssembly.instantiate() violates CSP" and
+      // the WebGL canvas loses its context.
       ...(process.env.NODE_ENV !== "production"
-        ? ["script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:"]
-        : ["script-src 'self' 'unsafe-inline' blob:"]),
+        ? ["script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob:"]
+        : ["script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:"]),
       // connect-src is intentionally broad: gateway URLs are user-configured
       // at runtime and cannot be enumerated at build time.
       // Restrict further when a fixed deployment target is known.
@@ -60,6 +64,12 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const nextConfig: NextConfig = {
+  // rook fork: the dashboard reverse-proxies /claw3d-app/* → port 3001 so the
+  // tailnet only needs port 9119 open. basePath tells Next.js to prefix every
+  // route and asset URL accordingly, so the proxied client-side router stays
+  // happy.
+  basePath: "/claw3d-app",
+  assetPrefix: "/claw3d-app",
   typescript: {
     ignoreBuildErrors: true,
   },

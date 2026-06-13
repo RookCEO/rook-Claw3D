@@ -175,7 +175,7 @@ export function SettingsPanel({
                   ? "http://localhost:7770"
                   : selectedAdapterType === "claw3d"
                     ? "http://localhost:3000/api/runtime/custom"
-                  : "ws://localhost:18789"
+                  : "ws://localhost:18989"
               }
               className="w-full rounded-md border border-cyan-500/10 bg-black/25 px-3 py-2 font-mono text-[11px] text-cyan-100 outline-none transition-colors placeholder:text-cyan-100/30 focus:border-cyan-400/30"
             />

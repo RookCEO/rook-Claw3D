@@ -19,7 +19,7 @@ import {
 const SETTINGS_DIRNAME = "claw3d";
 const SETTINGS_FILENAME = "settings.json";
 const OPENCLAW_CONFIG_FILENAME = "openclaw.json";
-const DEFAULT_LOCAL_GATEWAY_PORT = 18789;
+const DEFAULT_LOCAL_GATEWAY_PORT = 18989;
 
 export const resolveStudioSettingsPath = () =>
   path.join(resolveStateDir(), SETTINGS_DIRNAME, SETTINGS_FILENAME);

@@ -27,7 +27,7 @@ const resolveLocalGatewayPort = (gatewayUrl: string): number => {
     const port = Number(parsed.port);
     if (Number.isFinite(port) && port > 0) return port;
   } catch {}
-  return 18789;
+  return 18989;
 };
 
 export const GatewayConnectScreen = ({
@@ -342,7 +342,7 @@ export const GatewayConnectScreen = ({
             <p className="mt-1 text-xs leading-snug text-muted-foreground">
               Run <span className="font-mono text-foreground">npm run hermes-adapter</span>, then choose
               <span className="font-mono text-foreground"> Hermes backend</span>. The default local URL is
-              <span className="font-mono text-foreground"> ws://localhost:18789</span>.
+              <span className="font-mono text-foreground"> ws://localhost:18989</span>.
             </p>
           </div>
           <div className="rounded-md border border-border bg-muted/30 px-3 py-3">

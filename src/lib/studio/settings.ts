@@ -281,8 +281,25 @@ export type StudioSettingsPatch = {
 };
 
 const SETTINGS_VERSION = 1 as const;
-const DEFAULT_OPENCLAW_GATEWAY_URL = "ws://localhost:18789";
-const DEFAULT_LOCAL_ADAPTER_GATEWAY_URL = "ws://localhost:18789";
+
+/**
+ * When Claw3D is embedded in the rook dashboard (served via a same-origin
+ * reverse proxy under /claw3d-app/*), the browser is NOT on localhost — it
+ * is on the dashboard host. The adapter (claw3d-adapter.service) lives on
+ * the rook Pi's loopback and is bridged through the dashboard at the
+ * /claw3d-adapter WebSocket route. Auto-pick that URL when the page didn't
+ * load over localhost so the wizard pre-fills something that actually works.
+ */
+const _detectGatewayUrl = (): string => {
+  const localhost = "ws://localhost:18989";
+  if (typeof window === "undefined") return localhost;
+  const host = window.location.hostname;
+  if (!host || host === "localhost" || host === "127.0.0.1") return localhost;
+  const proto = window.location.protocol === "https:" ? "wss" : "ws";
+  return `${proto}://${window.location.host}/claw3d-adapter`;
+};
+const DEFAULT_OPENCLAW_GATEWAY_URL = _detectGatewayUrl();
+const DEFAULT_LOCAL_ADAPTER_GATEWAY_URL = _detectGatewayUrl();
 const DEFAULT_LOCAL_RUNTIME_URL = "http://localhost:7770";
 const DEFAULT_CLAW3D_RUNTIME_URL = "http://localhost:3000/api/runtime/custom";
 const DEFAULT_CUSTOM_RUNTIME_URL = "http://localhost:7770";

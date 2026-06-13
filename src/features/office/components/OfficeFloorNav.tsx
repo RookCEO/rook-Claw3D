@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 import {
+  DEFAULT_ACTIVE_FLOOR_ID,
   OFFICE_FLOORS,
   getAdjacentEnabledOfficeFloorId,
   listAvailableFloorsForAdapter,
@@ -103,9 +104,9 @@ export function OfficeFloorNav({
   const buildingFloors = availableFloors.filter((f) => f.zone === "building");
   const outsideFloors = availableFloors.filter((f) => f.zone === "outside");
 
-  // Active floor — fall back to lobby if current floor is no longer available
+  // Active floor — fall back to the rook default floor (hermes-first) if
   const activeIsAvailable = availableFloors.some((f) => f.id === activeFloorId);
-  const displayActiveFloorId = activeIsAvailable ? activeFloorId : "lobby";
+  const displayActiveFloorId = activeIsAvailable ? activeFloorId : DEFAULT_ACTIVE_FLOOR_ID;
 
   const activeFloor =
     OFFICE_FLOORS.find((floor) => floor.id === displayActiveFloorId) ?? OFFICE_FLOORS[0];
@@ -159,24 +160,12 @@ export function OfficeFloorNav({
         </button>
         {!directoryCollapsed ? (
           <div id="office-floor-directory-body">
-            <div className="mt-3 flex items-center gap-2">
-              <button
-                type="button"
-                className="rounded border border-amber-500/20 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-amber-100/80 transition-colors hover:border-amber-400/45 hover:text-amber-50"
-                onClick={() => onSelectFloor(getAdjacentEnabledOfficeFloorId(activeFloor.id, -1))}
-                aria-label="Switch to previous enabled floor"
-              >
-                Prev
-              </button>
-              <button
-                type="button"
-                className="rounded border border-amber-500/20 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-amber-100/80 transition-colors hover:border-amber-400/45 hover:text-amber-50"
-                onClick={() => onSelectFloor(getAdjacentEnabledOfficeFloorId(activeFloor.id, 1))}
-                aria-label="Switch to next enabled floor"
-              >
-                Next
-              </button>
-            </div>
+            {/* rook fork: Prev/Next floor buttons hidden. They cycled to
+                OpenClaw / Custom / Local-runtime floors which each require
+                their own gateway connection — and the wizard for those
+                fails (the dashboard is wired only for the Hermes adapter).
+                Users can still click a specific enabled floor in the
+                Building list below. */}
             <div className="mt-3 flex flex-col gap-2">
               <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
                 Building

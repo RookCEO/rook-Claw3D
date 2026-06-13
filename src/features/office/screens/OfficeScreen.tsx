@@ -76,6 +76,7 @@ import {
   createFloorRosterCache,
 } from "@/lib/office/floorRoster";
 import {
+  DEFAULT_ACTIVE_FLOOR_ID,
   getOfficeFloor,
   listOfficeFloorsForProvider,
   resolveActiveOfficeFloorId,
@@ -1114,7 +1115,7 @@ export function OfficeScreen({
   const [deskAssignmentByDeskUid, setDeskAssignmentByDeskUid] = useState<
     Record<string, string>
   >({});
-  const [activeFloorId, setActiveFloorId] = useState<FloorId>("lobby");
+  const [activeFloorId, setActiveFloorId] = useState<FloorId>(DEFAULT_ACTIVE_FLOOR_ID);
   const [pendingFloorRuntimeSwitch, setPendingFloorRuntimeSwitch] =
     useState<PendingFloorRuntimeSwitch | null>(null);
   const previousGatewayStatusRef = useRef<"disconnected" | "connecting" | "connected">(
@@ -1124,7 +1125,7 @@ export function OfficeScreen({
   const [floorRosterCache, setFloorRosterCache] = useState(() =>
     createFloorRosterCache(),
   );
-  const activeFloorIdRef = useRef<FloorId>("lobby");
+  const activeFloorIdRef = useRef<FloorId>(DEFAULT_ACTIVE_FLOOR_ID);
   const floorRosterCacheRef = useRef(floorRosterCache);
   const [gatewayModels, setGatewayModels] = useState<GatewayModelChoice[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -1197,6 +1198,7 @@ export function OfficeScreen({
       didAutoNavigateFromLobbyRef.current = false;
     }
   }, [status]);
+
 
   // Auto-navigate away from lobby when a real adapter connects.
   // Uses a ref flag instead of previousGatewayStatusRef so the effect can
@@ -1528,6 +1530,7 @@ export function OfficeScreen({
       token,
     ],
   );
+
   const focusChatTarget = useCallback(
     (agentId: string) => {
       setSelectedChatAgentId(agentId);
@@ -4545,7 +4548,10 @@ export function OfficeScreen({
     [marketplace.skillsReport],
   );
   const taskManagerReady = useMemo(
-    () => (taskManagerSkill ? deriveSkillReadinessState(taskManagerSkill) === "ready" : false),
+    // rook fork: HQ board is backed by the Hermes kanban plugin via
+    // /api/task-store → /api/plugins/kanban, so the gate is always
+    // satisfied — no skill install dance, no "Kanban Skill Not Installed".
+    () => true,
     [taskManagerSkill],
   );
   const soundclawReady = useMemo(

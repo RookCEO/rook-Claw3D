@@ -4419,23 +4419,18 @@ export function RetroOffice3D({
   const openKanbanBoard = useCallback(
     (item: FurnitureItem | null) => {
       if (!item || item.type !== "kanban_board") return;
-      if (!taskManagerEnabled) {
-        setActiveKanbanUid(null);
-        onKanbanInteract?.();
-        return;
+      // rook fork: send the user to the dashboard's Kanban tab instead of
+      // opening the cramped in-office kanban panel. The Hermes Kanban
+      // plugin (which now backs HQ via task-store) has much more room to
+      // render task titles legibly. Same-origin iframe → window.top.
+      try {
+        if (typeof window !== "undefined" && window.top) {
+          window.top.location.href = "/kanban";
+        }
+      } catch {
+        /* navigation blocked — fall through silently */
       }
-      setFollowAgentId(null);
-      setActiveAtmUid(null);
-      setActiveGithubTerminalUid(null);
-      setActiveQaTerminalUid(null);
-      if (manualSmsBoothOpen) {
-        closeManualSmsBoothView();
-      }
-      if (manualPhoneBoothOpen) {
-        closeManualPhoneBoothView();
-      }
-      onMonitorSelect?.(null);
-      setActiveKanbanUid(item._uid);
+      onKanbanInteract?.();
     },
     [
       closeManualPhoneBoothView,
@@ -6000,7 +5995,7 @@ export function RetroOffice3D({
                     Team roster
                   </div>
                   <div className="mt-1 text-sm font-semibold text-amber-100">
-                    Compact view for larger fleets.
+                    {agents.length} agent{agents.length === 1 ? "" : "s"}
                   </div>
                 </div>
                 <button
@@ -6013,7 +6008,7 @@ export function RetroOffice3D({
                 </button>
               </div>
 
-              <div className="grid max-h-[min(60vh,420px)] gap-2 overflow-y-auto pr-1 sm:grid-cols-2">
+              <div className="grid max-h-[min(60vh,420px)] gap-2 overflow-y-auto pr-1">
                 {agents.map((agent) => {
                   const status = agentStatusLookup[agent.id];
                   const isError = status?.isError ?? agent.status === "error";
@@ -6050,8 +6045,8 @@ export function RetroOffice3D({
                             className={`absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border border-[#120e08] ${dotClass}`}
                           />
                         </div>
-                        <div className="min-w-0">
-                          <div className="truncate text-sm font-semibold text-amber-100">
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-semibold text-amber-100 break-words">
                             {agent.name}
                           </div>
                           <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-amber-500/70">

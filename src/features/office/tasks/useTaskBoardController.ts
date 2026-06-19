@@ -1329,16 +1329,25 @@ export const useTaskBoardController = ({
     : null;
 
   const cardsByStatus = useMemo(() => {
-    const grouped = {
-      todo: [] as TaskBoardCard[],
-      in_progress: [] as TaskBoardCard[],
-      blocked: [] as TaskBoardCard[],
-      review: [] as TaskBoardCard[],
-      done: [] as TaskBoardCard[],
+    // rook fork: includes triage / scheduled / ready (lanes added to
+    // TASK_BOARD_STATUSES for Hermes kanban-plugin parity). Initialising
+    // every status to [] up front is load-bearing — `grouped[card.status].push`
+    // throws on an unknown lane otherwise and the whole HQ panel
+    // unmounts with "Application error: a client-side exception".
+    const grouped: Record<TaskBoardStatus, TaskBoardCard[]> = {
+      triage: [],
+      todo: [],
+      scheduled: [],
+      ready: [],
+      in_progress: [],
+      blocked: [],
+      review: [],
+      done: [],
     };
     for (const card of state.cards) {
       if (card.isArchived) continue;
-      grouped[card.status].push(card);
+      const bucket = grouped[card.status] ?? grouped.todo;
+      bucket.push(card);
     }
     return grouped;
   }, [state.cards]);

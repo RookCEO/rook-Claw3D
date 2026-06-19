@@ -22,7 +22,10 @@ const HERMES_KANBAN_URL =
   "http://127.0.0.1:9119/api/plugins/kanban";
 
 const CLAW_TO_HERMES_STATUS: Record<string, string> = {
+  triage: "triage",
   todo: "todo",
+  scheduled: "scheduled",
+  ready: "ready",
   in_progress: "running",
   blocked: "blocked",
   review: "review",

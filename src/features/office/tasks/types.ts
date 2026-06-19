@@ -1,7 +1,13 @@
 import type { EventFrame } from "@/lib/gateway/GatewayClient";
 
+// rook fork: triage / scheduled / ready added so the HQ board has lane
+// parity with the Hermes kanban plugin (BOARD_COLUMNS in
+// hermes-agent/plugins/kanban/dashboard/plugin_api.py).
 export const TASK_BOARD_STATUSES = [
+  "triage",
   "todo",
+  "scheduled",
+  "ready",
   "in_progress",
   "blocked",
   "review",

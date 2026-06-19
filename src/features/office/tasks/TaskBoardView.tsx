@@ -8,7 +8,10 @@ import type { CronJobSummary } from "@/lib/cron/types";
 import type { TaskBoardCard, TaskBoardStatus } from "@/features/office/tasks/types";
 
 const STATUS_LABELS: Record<TaskBoardStatus, string> = {
+  triage: "Triage",
   todo: "Todo",
+  scheduled: "Scheduled",
+  ready: "Ready",
   in_progress: "In Progress",
   blocked: "Blocked",
   review: "Review",
@@ -16,7 +19,10 @@ const STATUS_LABELS: Record<TaskBoardStatus, string> = {
 };
 
 const STATUS_ORDER: TaskBoardStatus[] = [
+  "triage",
   "todo",
+  "scheduled",
+  "ready",
   "in_progress",
   "blocked",
   "review",

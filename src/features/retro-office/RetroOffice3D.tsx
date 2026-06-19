@@ -4419,18 +4419,23 @@ export function RetroOffice3D({
   const openKanbanBoard = useCallback(
     (item: FurnitureItem | null) => {
       if (!item || item.type !== "kanban_board") return;
-      // rook fork: send the user to the dashboard's Kanban tab instead of
-      // opening the cramped in-office kanban panel. The Hermes Kanban
-      // plugin (which now backs HQ via task-store) has much more room to
-      // render task titles legibly. Same-origin iframe → window.top.
-      try {
-        if (typeof window !== "undefined" && window.top) {
-          window.top.location.href = "/kanban";
-        }
-      } catch {
-        /* navigation blocked — fall through silently */
+      if (!taskManagerEnabled) {
+        setActiveKanbanUid(null);
+        onKanbanInteract?.();
+        return;
       }
-      onKanbanInteract?.();
+      setFollowAgentId(null);
+      setActiveAtmUid(null);
+      setActiveGithubTerminalUid(null);
+      setActiveQaTerminalUid(null);
+      if (manualSmsBoothOpen) {
+        closeManualSmsBoothView();
+      }
+      if (manualPhoneBoothOpen) {
+        closeManualPhoneBoothView();
+      }
+      onMonitorSelect?.(null);
+      setActiveKanbanUid(item._uid);
     },
     [
       closeManualPhoneBoothView,

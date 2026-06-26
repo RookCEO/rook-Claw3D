@@ -75,7 +75,6 @@ test-results
 /.moltbot
 /agent-canvas
 /worktrees
-/.claude
 
 # local issue tracker
 /.beads
